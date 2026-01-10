@@ -2,6 +2,8 @@ import { useState } from 'react'
 
 function App() {
   const [selectedChar, setSelectedChar] = useState(null)
+  const [showVideo, setShowVideo] = useState(false)
+  const [videoUrl, setVideoUrl] = useState('')
 
   const characters = {
     ironman: {
@@ -135,9 +137,24 @@ function App() {
   }
 
   const movies = [
-    { title: 'The Avengers', year: '2012', rating: '8.0/10' },
-    { title: 'Infinity War', year: '2018', rating: '8.4/10' },
-    { title: 'Endgame', year: '2019', rating: '8.4/10' }
+    {
+      title: 'The Avengers',
+      year: '2012',
+      rating: '8.0/10',
+      videoUrl: 'https://www.youtube.com/embed/eOrNdBpGMv8?autoplay=1'
+    },
+    {
+      title: 'Infinity War',
+      year: '2018',
+      rating: '8.4/10',
+      videoUrl: 'https://www.youtube.com/embed/6ZfuNTqbHE8?autoplay=1'
+    },
+    {
+      title: 'Endgame',
+      year: '2019',
+      rating: '8.4/10',
+      videoUrl: 'https://www.youtube.com/embed/TcMBFSGVi1c?autoplay=1'
+    }
   ]
 
   const comics = [
@@ -146,6 +163,35 @@ function App() {
     { title: 'Secret Wars', year: '2015' },
     { title: 'Infinity Gauntlet', year: '1991' }
   ]
+
+  const handleExploreClick = () => {
+    // Random hero select karo
+    const heroKeys = Object.keys(characters)
+    const randomHero = heroKeys[Math.floor(Math.random() * heroKeys.length)]
+
+    // Hero select karo
+    setSelectedChar(randomHero)
+
+    // Smooth scroll to characters section
+    setTimeout(() => {
+      document.getElementById('characters')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }, 100)
+  }
+
+  const handleVideoPlay = (url) => {
+    setVideoUrl(url)
+    setShowVideo(true)
+    document.body.style.overflow = 'hidden'
+  }
+
+  const handleVideoClose = () => {
+    setShowVideo(false)
+    setVideoUrl('')
+    document.body.style.overflow = 'auto'
+  }
 
   const handleCharacterSelect = (charKey) => {
     setSelectedChar(charKey)
@@ -156,6 +202,28 @@ function App() {
 
   return (
     <div className="min-h-screen">
+      {/* Video Modal */}
+      {showVideo && (
+        <div className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4" onClick={handleVideoClose}>
+          <button
+            className="absolute top-4 right-4 text-white text-4xl hover:text-red-600 transition z-10"
+            onClick={handleVideoClose}
+          >
+            ✕
+          </button>
+          <div className="w-full max-w-6xl aspect-video" onClick={(e) => e.stopPropagation()}>
+            <iframe
+              className="w-full h-full rounded-lg"
+              src={videoUrl}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      )}
+
       {/* Navigation */}
       <nav className="bg-black/80 backdrop-blur-md fixed w-full z-50 border-b border-red-900/30">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
@@ -189,10 +257,16 @@ function App() {
                 When threats arise that no single hero can face alone, they assemble.
               </p>
               <div className="flex gap-4">
-                <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded font-bold transition transform hover:scale-105">
+                <button
+                  onClick={handleExploreClick}
+                  className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded font-bold transition transform hover:scale-105 hover:shadow-[0_0_20px_rgba(200,16,46,0.8)]"
+                >
                   EXPLORE NOW →
                 </button>
-                <button className="bg-transparent border-2 border-white/30 hover:border-white px-8 py-3 rounded font-semibold transition">
+                <button
+                  onClick={() => handleVideoPlay('https://www.youtube.com/embed/kH1XlwHQv9o?autoplay=1')}
+                  className="bg-transparent border-2 border-white/30 hover:border-white hover:bg-white/10 px-8 py-3 rounded font-semibold transition"
+                >
                   WATCH TRAILER
                 </button>
               </div>
@@ -202,16 +276,6 @@ function App() {
               <div className="text-9xl floating">🛡️</div>
               <div className="absolute -left-20 top-10 text-6xl floating" style={{animationDelay: '0.5s'}}>🕷️</div>
             </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center gap-2 animate-bounce">
-            <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-              <div className="w-1 h-2 bg-white rounded-full"></div>
-            </div>
-            <span className="text-xs text-white/50">SCROLL</span>
           </div>
         </div>
       </section>
@@ -229,7 +293,7 @@ function App() {
               <div
                 key={key}
                 onClick={() => handleCharacterSelect(key)}
-                className={`character-card bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-lg border rounded-xl p-4 text-center cursor-pointer transition-all duration-300 hover:scale-110 hover:border-red-600 hover:shadow-[0_0_20px_rgba(200,16,46,0.5)] ${selectedChar === key ? 'border-red-600 scale-110 shadow-[0_0_20px_rgba(200,16,46,0.5)]' : 'border-white/10'}`}
+                className={`character-card bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-lg border rounded-xl p-4 text-center cursor-pointer transition-all duration-300 hover:scale-110 hover:border-red-600 hover:shadow-[0_0_20px_rgba(200,16,46,0.5)] ${selectedChar === key ? 'border-red-600 scale-110 shadow-[0_0_30px_rgba(200,16,46,0.8)] ring-2 ring-red-600 bg-gradient-to-b from-red-900/30 to-purple-900/30' : 'border-white/10'}`}
               >
                 <div className="text-5xl mb-3 animate-bounce">{char.icon}</div>
                 <h3 className="text-sm font-bold">{char.name}</h3>
@@ -240,42 +304,49 @@ function App() {
 
           {/* Character Details */}
           {selectedChar && (
-            <div id="characterDetails" className="bg-gradient-to-br from-red-900/20 to-purple-900/20 backdrop-blur-lg border border-white/10 rounded-2xl p-8 animate-fadeIn">
-              <div className="grid md:grid-cols-2 gap-8">
+            <div id="characterDetails" className="bg-gradient-to-br from-red-900/20 to-purple-900/20 backdrop-blur-lg border border-red-600/50 rounded-2xl p-8 shadow-[0_0_50px_rgba(200,16,46,0.5)] animate-fadeIn">
+              <div className="absolute -top-1 -left-1 -right-1 -bottom-1 bg-gradient-to-r from-red-600 via-purple-600 to-red-600 rounded-2xl opacity-50 blur-xl animate-pulse"></div>
+              <div className="relative bg-gradient-to-br from-black/60 to-black/40 rounded-2xl p-8">
+                <div className="grid md:grid-cols-2 gap-8">
                 <div className="text-center">
-                  <div className="text-9xl mb-4 animate-bounce">{characters[selectedChar].icon}</div>
-                  <h2 className="text-4xl font-black bebas">{characters[selectedChar].name}</h2>
+                  <div className="text-9xl mb-4 animate-bounce filter drop-shadow-[0_0_30px_rgba(200,16,46,0.8)]">{characters[selectedChar].icon}</div>
+                  <h2 className="text-4xl font-black bebas bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent">{characters[selectedChar].name}</h2>
                   <p className="text-lg text-gray-400 mb-4">{characters[selectedChar].realName}</p>
-                  <p className="text-xl italic text-red-400">"{characters[selectedChar].quote}"</p>
+                  <p className="text-xl italic text-red-400 animate-pulse filter drop-shadow-[0_0_10px_rgba(200,16,46,0.8)]">"{characters[selectedChar].quote}"</p>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-4">⚡ POWERS & ABILITIES</h3>
+                  <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent">⚡ POWERS & ABILITIES</h3>
                   <div className="space-y-3 mb-8">
                     {characters[selectedChar].powers.map((power, idx) => (
-                      <div key={idx} className="flex items-center gap-3 bg-white/5 p-3 rounded-lg border-l-4 border-red-600 hover:bg-white/10 transition">
-                        <span className="text-2xl">💥</span>
-                        <span>{power}</span>
+                      <div
+                        key={idx}
+                        className="flex items-center gap-3 bg-gradient-to-r from-red-900/30 to-purple-900/30 p-3 rounded-lg border-l-4 border-red-600 hover:bg-red-900/40 hover:scale-105 transition transform shadow-lg hover:shadow-red-600/50"
+                        style={{animation: `slideIn 0.5s ease-out ${idx * 0.1}s both`}}
+                      >
+                        <span className="text-2xl animate-pulse">💥</span>
+                        <span className="font-semibold">{power}</span>
                       </div>
                     ))}
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">📊 HERO STATS</h3>
+                  <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent">📊 HERO STATS</h3>
                   <div className="space-y-3">
                     {Object.entries(characters[selectedChar].stats).map(([stat, value]) => (
                       <div key={stat}>
                         <div className="flex justify-between mb-1">
-                          <span className="capitalize font-semibold">{stat}</span>
-                          <span className="font-bold">{value}%</span>
+                          <span className="capitalize font-semibold text-gray-200">{stat}</span>
+                          <span className="font-bold text-red-400">{value}%</span>
                         </div>
-                        <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
+                        <div className="w-full bg-gray-700/50 rounded-full h-3 overflow-hidden shadow-inner">
                           <div
-                            className="bg-gradient-to-r from-red-600 to-red-400 h-3 rounded-full transition-all duration-1000 shadow-lg"
-                            style={{width: `${value}%`, boxShadow: '0 0 10px rgba(200,16,46,0.8)'}}
+                            className="bg-gradient-to-r from-red-600 via-red-500 to-red-400 h-3 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(200,16,46,0.8)] animate-pulse"
+                            style={{width: `${value}%`}}
                           ></div>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           )}
@@ -301,9 +372,16 @@ function App() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {movies.map((movie, idx) => (
-                  <div key={idx} className="movie-card bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-red-600 transition cursor-pointer hover:scale-105 hover:shadow-[0_15px_40px_rgba(0,0,0,0.5)]">
-                    <div className="h-64 bg-gradient-to-br from-red-900/50 to-purple-900/50 flex items-center justify-center text-6xl">
+                  <div
+                    key={idx}
+                    onClick={() => handleVideoPlay(movie.videoUrl)}
+                    className="movie-card bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-red-600 transition cursor-pointer hover:scale-105 hover:shadow-[0_15px_40px_rgba(0,0,0,0.5)]"
+                  >
+                    <div className="h-64 bg-gradient-to-br from-red-900/50 to-purple-900/50 flex items-center justify-center text-6xl relative group">
                       🎬
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <div className="text-white text-6xl">▶️</div>
+                      </div>
                     </div>
                     <div className="p-4">
                       <div className="bg-red-600 text-sm px-3 py-1 rounded-full inline-block mb-2 font-bold">⭐ {movie.rating}</div>
@@ -372,6 +450,9 @@ function App() {
                 <li><a href="#" className="hover:text-white transition">What If...?</a></li>
               </ul>
             </div>
+          </div>
+          <div className="pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
+            <p>© 2025 MARVEL. All Rights Reserved. | Made with ❤️ for fans</p>
           </div>
         </div>
       </footer>
