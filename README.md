@@ -6,6 +6,13 @@ A modern, interactive web application celebrating the Marvel Cinematic Universe'
 
 Visit the live application: [https://avengers-assemble-ishika-gupta.netlify.app/](https://avengers-assemble-ishika-gupta.netlify.app/)
 
+## Screenshots 
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/b84136d4-35bc-484c-9604-7f9d4a92cec1" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/3de3eb33-9120-4e6e-85d9-25ae061cb219" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/9953df0c-5f1d-4adb-9859-701905eb796e" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/161edb6c-45ed-41dd-8b3d-e7aac288e172" />
+<img width="700" height="500" alt="image" src="https://github.com/user-attachments/assets/01f47bfa-5130-4448-a919-34463257d5a9" />
+
 ## Overview
 
 Avengers Assemble is a dynamic web application that showcases the iconic heroes of the Marvel Cinematic Universe. The project features interactive elements, smooth animations, and a responsive design that adapts seamlessly across all devices.
